@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Stopwatch</title>
+    <style>
+        h1, h2{
+            text-align: center;
+            font-family: Helvetica;
+        }
+        .buttons{
+            text-align: center;
+        }
+    </style>
+
+</head>
+<body>
+    <h1>Stopwatch</h1>
+    <h2 id="display">00:00:00.0</h2>
+    <div class="buttons">
+        <button id="start">Start</button>
+        <button id="pause">Pause</button>
+        <button id="reset">Reset</button>
+    </div>
+    <script>
+        var display = document.getElementById('display');
+        var startB = document.getElementById('start');
+        var pauseB = document.getElementById('pause');
+        var resetB = document.getElementById('reset');
+        var hrs = 00;
+        var mins = 00;
+        var sec = 00;
+        var ms = 00;
+        var m;
+
+
+        function increment() {
+            ms++;
+            if(ms >= 1000) {
+                ms = 0;
+                sec++;
+                if (sec >= 60) {
+                    sec = 0;
+                    mins++;
+                    if (mins >= 60) {
+                        mins = 0;
+                        hrs++;
+                    }
+                }
+            }
+            display.innerHTML = (hrs < 10 ? "0" + hrs : hrs) + ':' + (mins < 10 ? "0" + mins : mins) + ':'
+                + (sec < 10 ? "0" + sec : sec) + "." + (ms < 10 ? "0" + ms : ms);
+            tick();
+        }
+
+        function tick(){
+            s = setTimeout(increment, 1);
+        }
+
+        function stop(){
+            clearTimeout(s);
+        }
+
+        startB.onclick = tick;
+        pauseB.onclick = stop;
+        resetB.onclick = function () {
+            stop();
+            display.innerHTML = '00:00:00.0';
+            sec = 0, mins = 0, hrs = 0, ms = 0;
+        }
+    </script>
+</body>
+</html>
