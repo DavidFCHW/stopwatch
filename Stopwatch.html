@@ -11,9 +11,15 @@
         .buttons{
             text-align: center;
         }
-        #history{
-            margin:auto;
+        table{
+            margin: auto;
+        }
+        table, th, td{
             font-family: Calibri , Helvetica;
+            border: 1px solid black;
+        }
+        tr:nth-child(even){
+            background-color: #dddddd;
         }
     </style>
 
@@ -26,13 +32,14 @@
         <button id="pause">Pause</button>
         <button id="reset">Reset</button>
         <button id="lap">Lap</button>
+        <button id="clear">Clear</button>
     </div>
     <br><br>
     <table id="history">
         <thead>
             <tr><th>Attempt</th><th>Time</th></tr>
         </thead>
-        <tbody>
+        <tbody id="data">
 
         </tbody>
     </table>
@@ -46,11 +53,12 @@
         var mins = 00;
         var sec = 00;
         var ms = 00;
-        var m;
+        //var m;
         var lapB = document.getElementById('lap');
-        var x = document.getElementById('display');
-        var tab = document.getElementsByTagName('tbody');
-
+        var tab = document.getElementById('history');
+        var count = 0;
+        var clearB = document.getElementById('clear');
+        //var tb = document.getElementById('data');
 
         function increment() {
             ms++;
@@ -78,22 +86,33 @@
         function stop(){
             clearTimeout(s);
         }
-
-        function record(){
-            var row = tab.insertRow(0);
-            var att = row.insertCell(0);
-            var time = row.insertCell(1);
-            att.innerHTML = '1';
-            time.innerHTML = x;
-        }
-        startB.onclick = tick;
-        pauseB.onclick = stop;
-        resetB.onclick = function () {
+        function startAgain(){
             stop();
             display.innerHTML = '00:00:00.0';
             sec = 0, mins = 0, hrs = 0, ms = 0;
         }
+
+        function record(){
+            count++;
+            var x = document.getElementById("display").innerHTML;
+            var row = tab.insertRow(-1);
+            var att = row.insertCell(0);
+            var time = row.insertCell(1);
+            att.innerHTML = count;
+            time.innerHTML = x;
+        }
+
+        function clearTable(){
+            var rowsNum = tab.rows.length;
+            while(rowsNum > 0){
+                tab.deleteRow(0);
+            }
+        }
+        startB.onclick = tick;
+        pauseB.onclick = stop;
+        resetB.onclick = startAgain;
         lapB.onclick = record;
+        clearB.onclick = clearTable;
     </script>
 </body>
 </html>
