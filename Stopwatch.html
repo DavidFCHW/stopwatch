@@ -32,7 +32,7 @@
         <button id="pause">Pause</button>
         <button id="reset">Reset</button>
         <button id="lap">Lap</button>
-        <button id="clear">Clear</button>
+        <button id="clear">Clear Table</button>
     </div>
     <br><br>
     <table id="history">
@@ -58,7 +58,6 @@
         var tab = document.getElementById('history');
         var count = 0;
         var clearB = document.getElementById('clear');
-        //var tb = document.getElementById('data');
 
         function increment() {
             ms++;
@@ -93,25 +92,39 @@
         }
 
         function record(){
-            count++;
+            count = 1;
             var x = document.getElementById("display").innerHTML;
             var row = tab.insertRow(-1);
-            var att = row.insertCell(0);
+            att = row.insertCell(0);
             var time = row.insertCell(1);
             att.innerHTML = count;
             time.innerHTML = x;
         }
 
         function clearTable(){
-            var rowsNum = tab.rows.length;
-            while(rowsNum > 0){
-                tab.deleteRow(0);
+            while(1 < tab.rows.length){
+                tab.deleteRow(1);
+            }
+            if(count > 1){
+                record();
+                clearTable();
+                count = 0;
             }
         }
+
         startB.onclick = tick;
         pauseB.onclick = stop;
         resetB.onclick = startAgain;
-        lapB.onclick = record;
+        lapB.onclick = function () {
+            count++;
+            var x = document.getElementById("display").innerHTML;
+            var row = tab.insertRow(-1);
+            att = row.insertCell(0);
+            var time = row.insertCell(1);
+            att.innerHTML = count;
+            time.innerHTML = x;
+            //need to deal with code duplication, see record().
+        };
         clearB.onclick = clearTable;
     </script>
 </body>
