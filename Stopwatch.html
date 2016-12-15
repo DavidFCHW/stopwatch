@@ -6,13 +6,28 @@
     <style>
         h1, h2{
             text-align: center;
-            font-family: Helvetica;
+            font-family: Calibri, Helvetica;
         }
         .buttons{
             text-align: center;
         }
+        table{
+            margin: auto;
+        }
+        table, th, td{
+            font-family: Calibri , Helvetica;
+            border: 1px solid black;
+        }
+        tr:nth-child(even){
+            background-color: #dddddd;
+        }
     </style>
-
+    <!--consider doing all the script in jquery.!-->
+    <script>
+        $(document).ready(function () {
+            $("#display").click()
+        })
+    </script>
 </head>
 <body>
     <h1>Stopwatch</h1>
@@ -21,7 +36,14 @@
         <button id="start">Start</button>
         <button id="pause">Pause</button>
         <button id="reset">Reset</button>
+        <button id="lap" type="submit">Lap</button>
+        <button id="clear">Clear Table</button>
     </div>
+    <br><br>
+    <table id="history">
+        <tr><th>Attempt</th><th>Time</th></tr>
+    </table>
+
     <script>
         var display = document.getElementById('display');
         var startB = document.getElementById('start');
@@ -31,12 +53,15 @@
         var mins = 00;
         var sec = 00;
         var ms = 00;
-        var m;
-
+        //var m;
+        var lapB = document.getElementById('lap');
+        var tab = document.getElementById('history');
+        var count = 0;
+        var clearB = document.getElementById('clear');
 
         function increment() {
             ms++;
-            if(ms >= 1000) {
+            if(ms >= 100) {
                 ms = 0;
                 sec++;
                 if (sec >= 60) {
@@ -50,24 +75,62 @@
             }
             display.innerHTML = (hrs < 10 ? "0" + hrs : hrs) + ':' + (mins < 10 ? "0" + mins : mins) + ':'
                 + (sec < 10 ? "0" + sec : sec) + "." + (ms < 10 ? "0" + ms : ms);
-            tick();
+            tick(); //in jQuery just call setTimeout(increment, 10); and assign this to global variable "s".
         }
 
         function tick(){
-            s = setTimeout(increment, 1);
+            s = setTimeout(increment, 10);
         }
 
         function stop(){
             clearTimeout(s);
         }
-
-        startB.onclick = tick;
-        pauseB.onclick = stop;
-        resetB.onclick = function () {
-            stop();
+        function startAgain(){
+            stop(); // can just call clearTimeout(s); to avoid
             display.innerHTML = '00:00:00.0';
             sec = 0, mins = 0, hrs = 0, ms = 0;
         }
+
+        function record(){
+            count = 1;
+            var x = document.getElementById("display").innerHTML;
+            var row = tab.insertRow(-1);
+            att = row.insertCell(0);
+            var time = row.insertCell(1);
+            att.innerHTML = count;
+            time.innerHTML = x;
+        }
+
+        function clearTable(){
+            while(1 < tab.rows.length){
+                tab.deleteRow(1);
+            }
+            /**if(count > 1){
+                record();
+                clearTable();
+                count = 0;
+            }*/
+        }
+
+        function sub(){
+
+        }
+
+        startB.onclick = tick;
+        pauseB.onclick = stop;
+        resetB.onclick = startAgain;
+        lapB.onclick = function () {
+            count++;
+            var x = document.getElementById("display").innerHTML;
+            var row = tab.insertRow(-1);
+            att = row.insertCell(0);
+            var time = row.insertCell(1);
+            att.innerHTML = count;
+            time.innerHTML = x;
+            //need to deal with code duplication, see record(). [Forget it for now.]
+
+        };
+        clearB.onclick = clearTable;
     </script>
 </body>
 </html>
